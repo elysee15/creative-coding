@@ -102,7 +102,7 @@ function Slide() {
         plugins={[Autoplay(), Fade()]}
         setApi={setApi}
       >
-        <CarouselContent className="min-h-screen ml-0">
+        <CarouselContent className="min-h-dvh ml-0">
           {SLIDE_ITEMS.map((item, index) => (
             <CarouselItem key={index} className="relative inset-0">
               <SlideVideo
