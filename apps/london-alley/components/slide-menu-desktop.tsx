@@ -12,7 +12,11 @@ type SlideMenuProps = {
   isCurrentSlide: (index: number) => boolean;
 };
 
-function SlideMenu({ items, onMouseEnter, isCurrentSlide }: SlideMenuProps) {
+function SlideMenuDesktop({
+  items,
+  onMouseEnter,
+  isCurrentSlide,
+}: SlideMenuProps) {
   const artistRefs = React.useRef<HTMLSpanElement[]>([]);
   const [artistWidths, setArtistWidths] = React.useState<string[]>([]);
 
@@ -22,11 +26,6 @@ function SlideMenu({ items, onMouseEnter, isCurrentSlide }: SlideMenuProps) {
     );
     setArtistWidths(widths);
   }, [items]);
-
-  // const getArtistWidth = (index: number): `${number}px` => {
-  //   const artist = artistRefs.current[index];
-  //   return artist ? `${artist.offsetWidth}px` : `0px`;
-  // };
 
   return (
     <article className="flex flex-col gap-y-2">
@@ -74,7 +73,7 @@ function SlideMenu({ items, onMouseEnter, isCurrentSlide }: SlideMenuProps) {
   );
 }
 
-export default SlideMenu;
+export default SlideMenuDesktop;
 
 declare module "react" {
   interface CSSProperties {
