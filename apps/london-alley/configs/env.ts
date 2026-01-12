@@ -1,0 +1,4 @@
+export const Env = {
+  NEXT_PUBLIC_CLOUDFLARE_R2_DEV_URL:
+    process.env.NEXT_PUBLIC_CLOUDFLARE_R2_DEV_URL,
+};
