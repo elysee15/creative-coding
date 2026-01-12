@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${fontSans.className} font-sans antialiased`}>
         <header className="fixed left-0 right-0 top-4 text-white bg-red-500 z-10 mix-blend-exclusion">
-          <h1 className="font-extrabold text-5xl absolute left-1/2 top-1/2 -translate-x-1/2 font-stretch-extra-expanded tracking-[-0.07em] flex flex-col items-center leading-[0.8em]">
+          <h1 className="font-extrabold text-2xl md:text-5xl absolute left-1/2 top-1/2 -translate-x-1/2 font-stretch-extra-expanded tracking-[-0.07em] flex flex-col items-center leading-[0.8em]">
             <span>BABI</span>
             <span>MUSIC</span>
           </h1>

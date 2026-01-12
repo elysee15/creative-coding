@@ -9,19 +9,11 @@ import {
   DrawerClose,
 } from "@workspace/ui/components/drawer";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React from "react";
 import VideoWithFallback from "./video-with-fallback";
 import ScrambleText from "./scramble-text";
 
 function Menu() {
-  const videoRef = React.useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    videoRef.current?.addEventListener("canplay", () => {
-      videoRef.current?.play();
-    });
-  }, []);
-
   return (
     <Drawer direction="top">
       <DrawerTrigger className="font-light uppercase hover:text-gold  relative group">
@@ -84,10 +76,6 @@ function Menu() {
                 fallbackSrc={
                   Env.NEXT_PUBLIC_CLOUDFLARE_R2_DEV_URL + "/babilab.png"
                 }
-                muted
-                preload="metadata"
-                autoPlay
-                ref={videoRef}
               ></VideoWithFallback>
               <Link
                 href="/"

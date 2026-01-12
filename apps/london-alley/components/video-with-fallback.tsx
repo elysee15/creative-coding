@@ -7,53 +7,108 @@ import React, { useRef, useState } from "react";
 type VideoWithFallbackProps = {
   src: string;
   fallbackSrc: string;
-} & React.ComponentProps<"video">;
+  fallbackClassName?: string;
+  playOnHover?: boolean;
+};
 
 function VideoWithFallback({
   src,
   fallbackSrc,
-  ref,
-  ...videoProps
+  fallbackClassName,
+  playOnHover = false,
 }: VideoWithFallbackProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const fallbackRef = useRef<HTMLImageElement>(null);
-
   const [canPlay, setCanPlay] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  console.log("isMobile", isMobile);
 
   React.useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.oncanplay = () => {
-        console.log("canplay");
-        setCanPlay(true);
-        videoRef.current?.play();
-      };
+    // Check if device is mobile
+    const checkMobile = () => {
+      const mobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        ) || window.innerWidth < 768;
+      setIsMobile(mobile);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleCanPlay = () => {
+      setCanPlay(true);
+
+      // On mobile, always autoplay (ignore playOnHover)
+      // On desktop, respect playOnHover setting
+      if (isMobile || !playOnHover) {
+        video.play().catch(() => {
+          // Autoplay failed, likely due to browser policies
+        });
+      } else {
+        video.pause();
+      }
+    };
+
+    video.addEventListener("canplay", handleCanPlay);
+
+    return () => {
+      video.removeEventListener("canplay", handleCanPlay);
+    };
+  }, [src, playOnHover, isMobile]);
+
+  const handleMouseEnter = () => {
+    // Only handle hover on non-mobile devices
+    if (!isMobile && playOnHover && videoRef.current) {
+      videoRef.current.play();
     }
-  }, [src]);
+  };
+
+  const handleMouseLeave = () => {
+    // Only handle hover on non-mobile devices
+    if (!isMobile && playOnHover && videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.pause();
+    }
+  };
 
   return (
-    <div className="relative aspect-video size-full">
+    <div
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="relative aspect-video size-full"
+    >
       <video
+        ref={videoRef}
         src={src}
         muted
         preload="metadata"
-        autoPlay
-        {...videoProps}
+        autoPlay={isMobile || !playOnHover}
+        playsInline
+        loop
         className={cn("object-cover size-full absolute inset-0", {
           "opacity-0": !canPlay,
         })}
-        ref={videoRef}
-      ></video>
+      />
       <Image
         src={fallbackSrc}
         alt=""
-        ref={fallbackRef}
         priority
         fill
         className={cn(
           "object-cover opacity-100 transition-opacity duration-200",
           {
-            "opacity-0": canPlay,
-          }
+            "group-hover:opacity-0": canPlay && !isMobile,
+          },
+          fallbackClassName
         )}
       />
     </div>
