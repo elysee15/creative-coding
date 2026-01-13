@@ -4,6 +4,7 @@ export const SLIDE_ITEMS: {
   videoSrc: string;
   cover: string;
   category: string;
+  dominantColor?: string;
 }[] = [
   {
     title: "Babilab feat. Døpelym & Rsko - Boosté",

@@ -3,6 +3,7 @@
 import { cn } from "@workspace/ui/lib/utils";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
+import { useMobile } from "@/hooks/use-mobile";
 
 type VideoWithFallbackProps = {
   src: string;
@@ -19,26 +20,7 @@ function VideoWithFallback({
 }: VideoWithFallbackProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [canPlay, setCanPlay] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  console.log("isMobile", isMobile);
-
-  React.useEffect(() => {
-    // Check if device is mobile
-    const checkMobile = () => {
-      const mobile =
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        ) || window.innerWidth < 768;
-      setIsMobile(mobile);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
-  }, []);
+  const isMobile = useMobile();
 
   React.useEffect(() => {
     const video = videoRef.current;

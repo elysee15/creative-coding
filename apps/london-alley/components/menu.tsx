@@ -39,7 +39,7 @@ function Menu() {
             </nav>
           </section>
           <section className="flex flex-col-reverse md:flex-col justify-between h-full pt-4 gap-6 md:gap-y-3">
-            <ul className="flex flex-wrap justify-between gap-y-1 gap-x-5 text-sm lg:text-base columns-2 md:grid md:grid-cols-2">
+            <ul className="flex flex-wrap h-full justify-between gap-y-1 gap-x-5 text-sm lg:text-base columns-2 md:grid md:grid-cols-2">
               {SOCIAL_NETWORKS.map((item) => (
                 <li
                   key={item.title}
