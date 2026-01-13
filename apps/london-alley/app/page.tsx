@@ -22,7 +22,7 @@ export default async function Page() {
       <div className="fixed top-0 w-full">
         <Slide />
       </div>
-      <article className="z-1 relative mt-[100vh] md:columns-2 gap-1 bg-[#1a1a1a] p-1">
+      <article className="z-1 relative mt-[100vh] grid grid-cols-1 sm:grid-cols-2 gap-1 bg-[#1a1a1a] p-1">
         {itemsWithDominantColors.map((item, index) => (
           <MusicCard key={`music-card-${item.title}-${index}`} data={item} />
         ))}

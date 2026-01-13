@@ -89,6 +89,7 @@ function VideoWithFallback({
           "object-cover opacity-100 transition-opacity duration-200",
           {
             "group-hover:opacity-0": canPlay && !isMobile,
+            "opacity-0": canPlay && isMobile,
           },
           fallbackClassName
         )}

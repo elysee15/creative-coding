@@ -30,8 +30,7 @@ function SlideMenuDesktop({
   return (
     <article className="flex flex-col gap-y-2">
       {items.map((item, index) => (
-        <Link
-          href={item.title}
+        <div
           key={`${item.title}-${index}`}
           className="overflow-hidden relative"
           style={{
@@ -67,7 +66,7 @@ function SlideMenuDesktop({
               {item.artist}
             </span>
           </div>
-        </Link>
+        </div>
       ))}
     </article>
   );

@@ -13,6 +13,8 @@ import {
 } from "@workspace/ui/components/carousel";
 import { SLIDE_ITEMS } from "@/lib/constants/slide";
 import SlideMenuDesktop from "./slide-menu-desktop";
+import Image from "next/image";
+import { cn } from "@workspace/ui/lib/utils";
 
 const CLOUDFLARE_PREFIX = process.env.NEXT_PUBLIC_CLOUDFLARE_R2_DEV_URL;
 const CAROUSEL_DURATION = 20;
@@ -20,19 +22,18 @@ const CAROUSEL_DURATION = 20;
 function Slide() {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const videoRefs = useRef<HTMLVideoElement[]>([]);
+  // const videoRefs = useRef<HTMLVideoElement[]>([]);
 
   const controlVideos = useCallback((activeIndex: number) => {
-    videoRefs.current.forEach((video, index) => {
-      if (!video) return;
-
-      if (index === activeIndex) {
-        video.play();
-      } else {
-        video.currentTime = 0;
-        video.pause();
-      }
-    });
+    // videoRefs.current.forEach((video, index) => {
+    //   if (!video) return;
+    //   if (index === activeIndex) {
+    //     video.play();
+    //   } else {
+    //     video.currentTime = 0;
+    //     video.pause();
+    //   }
+    // });
   }, []);
 
   const stopAutoplay = useCallback(() => {
@@ -109,11 +110,11 @@ function Slide() {
               <SlideVideo
                 item={item}
                 index={index}
+                isCurrentSlide={index === currentSlide}
                 isActive={index === currentSlide}
-                videoRef={(el) => (videoRefs.current[index] = el!)}
               />
 
-              <div className="absolute inset-0 bg-black/50" />
+              <div className="absolute inset-0 bg-black/40" />
 
               <MobileSlideControls
                 item={item}
@@ -136,15 +137,52 @@ function Slide() {
   );
 }
 
-// Extracted sub-components for better separation of concerns
 interface SlideVideoProps {
   item: (typeof SLIDE_ITEMS)[number];
   index: number;
   isActive: boolean;
-  videoRef: (el: HTMLVideoElement) => void;
+  videoRef?: (el: HTMLVideoElement) => void;
+  isCurrentSlide: boolean;
 }
 
-function SlideVideo({ item, index, isActive, videoRef }: SlideVideoProps) {
+function SlideVideo({ item, isCurrentSlide }: SlideVideoProps) {
+  const videoInnerRef = useRef<HTMLVideoElement>(null);
+  const [canPlay, setCanPlay] = useState(false);
+
+  useEffect(() => {
+    const video = videoInnerRef.current;
+    if (!video) return;
+
+    const handleCanPlay = () => {
+      setCanPlay(true);
+    };
+
+    // Add event listener
+    video.addEventListener("canplay", handleCanPlay);
+
+    if (isCurrentSlide) {
+      // Reset state when becoming current slide
+      setCanPlay(false);
+
+      // Try to play if already can play
+      if (video.readyState >= 3) {
+        setCanPlay(true);
+        video.play().catch((err) => {
+          console.error("Video play failed:", err);
+        });
+      }
+    } else {
+      // Pause and reset when not current slide
+      video.pause();
+      video.currentTime = 0;
+      setCanPlay(false);
+    }
+
+    return () => {
+      video.removeEventListener("canplay", handleCanPlay);
+    };
+  }, [isCurrentSlide]);
+
   return (
     <figure className="size-full absolute inset-0">
       <video
@@ -153,10 +191,25 @@ function SlideVideo({ item, index, isActive, videoRef }: SlideVideoProps) {
         muted
         loop
         preload="metadata"
-        autoPlay={isActive}
         poster={`${CLOUDFLARE_PREFIX}${item.cover}`}
-        className="w-full h-full object-cover"
-        ref={videoRef}
+        className={cn(
+          "size-full object-cover transition-opacity duration-300",
+          {
+            "opacity-0": !canPlay,
+          }
+        )}
+        ref={videoInnerRef}
+      />
+      <Image
+        src={`${CLOUDFLARE_PREFIX}${item.cover}`}
+        alt={item.title}
+        className={cn(
+          "size-full object-cover transition-opacity duration-300",
+          {
+            "opacity-0": canPlay,
+          }
+        )}
+        fill={true}
       />
     </figure>
   );
@@ -219,7 +272,7 @@ function DesktopSlideMenu({
   isCurrentSlide,
 }: DesktopSlideMenuProps) {
   return (
-    <div className="absolute inset-0 flex-col justify-end items-end pb-10 pr-4 z-3 hidden lg:flex bg-black/50">
+    <div className="absolute inset-0 flex-col justify-end items-end pb-10 pr-4 z-3 hidden lg:flex">
       <SlideMenuDesktop
         items={items}
         onMouseEnter={onMouseEnter}
