@@ -32,6 +32,7 @@
     "node-vibrant": "^4.0.3",
     "react-color-extractor": "^1.1.2",
     "react-image-palette": "^0.2.4",
+    "react-intersection-observer": "^10.0.0",
     "server-only": "^0.0.1"
   }
 }

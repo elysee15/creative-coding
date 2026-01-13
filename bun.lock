@@ -13,6 +13,7 @@
         "node-vibrant": "^4.0.3",
         "react-color-extractor": "^1.1.2",
         "react-image-palette": "^0.2.4",
+        "react-intersection-observer": "^10.0.0",
         "server-only": "^0.0.1",
       },
       "devDependencies": {
@@ -1106,6 +1107,8 @@
     "react-dom": ["react-dom@19.2.1", "", { "dependencies": { "scheduler": "0.27.0" }, "peerDependencies": { "react": "19.2.1" } }, "sha512-ibrK8llX2a4eOskq1mXKu/TGZj9qzomO+sNfO98M6d9zIPOEhlBkMkBUBLd1vgS0gQsLDBzA+8jJBVXDnfHmJg=="],
 
     "react-image-palette": ["react-image-palette@0.2.4", "", { "dependencies": { "image-palette-core": "^0.2.2" }, "peerDependencies": { "react": "^15.0.0-0 || ^16.0.0-0" } }, "sha512-FrJaST+X6CxALyn/tvt3mFx3R0iJHJVyxp+MIvKriyagIWVoYGEV1QzdjdotDXeaopuPEnCwKEUgmhRo6iEqpQ=="],
+
+    "react-intersection-observer": ["react-intersection-observer@10.0.0", "", { "peerDependencies": { "react": "^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0" }, "optionalPeers": ["react-dom"] }, "sha512-JJRgcnFQoVXmbE5+GXr1OS1NDD1gHk0HyfpLcRf0575IbJz+io8yzs4mWVlfaqOQq1FiVjLvuYAdEEcrrCfveg=="],
 
     "react-is": ["react-is@16.13.1", "", {}, "sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ=="],
 

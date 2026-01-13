@@ -24,7 +24,11 @@ export default async function Page() {
       </div>
       <article className="z-1 relative mt-[100vh] grid grid-cols-1 sm:grid-cols-2 gap-1 bg-[#1a1a1a] p-1">
         {itemsWithDominantColors.map((item, index) => (
-          <MusicCard key={`music-card-${item.title}-${index}`} data={item} />
+          <MusicCard
+            key={`music-card-${item.title}-${index}`}
+            data={item}
+            isFirst={index === 0}
+          />
         ))}
       </article>
     </main>

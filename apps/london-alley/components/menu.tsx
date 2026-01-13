@@ -88,7 +88,7 @@ function Menu() {
             </div>
           </section>
         </article>
-        <DrawerClose className="absolute top-4 right-4">
+        <DrawerClose className="absolute top-4 right-4" asChild>
           <button className="cursor-pointer">CLOSE</button>
         </DrawerClose>
       </DrawerContent>

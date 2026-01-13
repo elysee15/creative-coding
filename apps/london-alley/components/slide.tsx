@@ -15,6 +15,7 @@ import { SLIDE_ITEMS } from "@/lib/constants/slide";
 import SlideMenuDesktop from "./slide-menu-desktop";
 import Image from "next/image";
 import { cn } from "@workspace/ui/lib/utils";
+import { useInView } from "react-intersection-observer";
 
 const CLOUDFLARE_PREFIX = process.env.NEXT_PUBLIC_CLOUDFLARE_R2_DEV_URL;
 const CAROUSEL_DURATION = 20;
@@ -22,19 +23,6 @@ const CAROUSEL_DURATION = 20;
 function Slide() {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  // const videoRefs = useRef<HTMLVideoElement[]>([]);
-
-  const controlVideos = useCallback((activeIndex: number) => {
-    // videoRefs.current.forEach((video, index) => {
-    //   if (!video) return;
-    //   if (index === activeIndex) {
-    //     video.play();
-    //   } else {
-    //     video.currentTime = 0;
-    //     video.pause();
-    //   }
-    // });
-  }, []);
 
   const stopAutoplay = useCallback(() => {
     api?.plugins()?.autoplay?.stop();
@@ -48,7 +36,6 @@ function Slide() {
     const handleSelect = () => {
       const selected = api.selectedScrollSnap();
       setCurrentSlide(selected);
-      controlVideos(selected);
     };
 
     api.on("select", handleSelect);
@@ -56,7 +43,7 @@ function Slide() {
     return () => {
       api.off("select", handleSelect);
     };
-  }, [api, controlVideos]);
+  }, [api]);
 
   const handleSlideHover = useCallback(
     (_event: React.MouseEvent<HTMLDivElement>, index: number) => {
@@ -64,9 +51,8 @@ function Slide() {
 
       api.scrollTo(index);
       stopAutoplay();
-      controlVideos(api.selectedScrollSnap());
     },
-    [api, controlVideos, stopAutoplay]
+    [api, stopAutoplay]
   );
 
   const navigateSlide = useCallback(
@@ -85,9 +71,8 @@ function Slide() {
       }
 
       stopAutoplay();
-      controlVideos(api.selectedScrollSnap());
     },
-    [api, controlVideos, stopAutoplay]
+    [api, stopAutoplay]
   );
 
   const isCurrentSlide = useCallback(
@@ -148,6 +133,10 @@ interface SlideVideoProps {
 function SlideVideo({ item, isCurrentSlide }: SlideVideoProps) {
   const videoInnerRef = useRef<HTMLVideoElement>(null);
   const [canPlay, setCanPlay] = useState(false);
+  const { ref, inView } = useInView({
+    threshold: 0.5,
+    triggerOnce: true,
+  });
 
   useEffect(() => {
     const video = videoInnerRef.current;
@@ -157,14 +146,11 @@ function SlideVideo({ item, isCurrentSlide }: SlideVideoProps) {
       setCanPlay(true);
     };
 
-    // Add event listener
-    video.addEventListener("canplay", handleCanPlay);
+    video.addEventListener("canplaythrough", handleCanPlay);
 
     if (isCurrentSlide) {
-      // Reset state when becoming current slide
       setCanPlay(false);
 
-      // Try to play if already can play
       if (video.readyState >= 3) {
         setCanPlay(true);
         video.play().catch((err) => {
@@ -172,19 +158,18 @@ function SlideVideo({ item, isCurrentSlide }: SlideVideoProps) {
         });
       }
     } else {
-      // Pause and reset when not current slide
       video.pause();
       video.currentTime = 0;
       setCanPlay(false);
     }
 
     return () => {
-      video.removeEventListener("canplay", handleCanPlay);
+      video.removeEventListener("canplaythrough", handleCanPlay);
     };
   }, [isCurrentSlide]);
 
   return (
-    <figure className="size-full absolute inset-0">
+    <figure className="size-full absolute inset-0" ref={ref}>
       <video
         src={`${CLOUDFLARE_PREFIX}${item.videoSrc}`}
         playsInline

@@ -2,7 +2,13 @@ import { SLIDE_ITEMS } from "@/lib/constants/slide";
 import VideoWithFallback from "./video-with-fallback";
 import { Env } from "@/configs/env";
 
-export function MusicCard({ data }: { data: (typeof SLIDE_ITEMS)[number] }) {
+export function MusicCard({
+  data,
+  isFirst = false,
+}: {
+  data: (typeof SLIDE_ITEMS)[number];
+  isFirst?: boolean;
+}) {
   return (
     <div
       className="relative aspect-5/4 h-auto hover:p-4 2xl:hover:p-6 transition-all duration-300 group ease-[cubic-bezier(.17,.67,1,1.23)]"
@@ -14,12 +20,12 @@ export function MusicCard({ data }: { data: (typeof SLIDE_ITEMS)[number] }) {
         src={`${Env.NEXT_PUBLIC_CLOUDFLARE_R2_DEV_URL}${data.videoSrc}`}
         fallbackSrc={`${Env.NEXT_PUBLIC_CLOUDFLARE_R2_DEV_URL}${data.cover}`}
         playOnHover
+        priority={isFirst}
       />
-      <span className="absolute inset-0 bg-black/30"></span>
-      <h3 className="uppercase font-light text-xs md:text-sm 2xl:text-base absolute right-4 2xl:right-6 top-4 2xl:top-6 text-white transition-[clip-path] duration-800 xl:[clip-path:polygon(0_0,100%_0,100%_0,0_0)] xl:group-hover:[clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]">
+      <h3 className="uppercase z-2 font-light text-xs md:text-sm 2xl:text-base absolute right-4 2xl:right-6 top-4 2xl:top-6 text-white transition-[clip-path] duration-800 xl:[clip-path:polygon(0_0,100%_0,100%_0,0_0)] xl:group-hover:[clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]">
         {data.category}
       </h3>
-      <div className="absolute bottom-4 left-4 2xl:bottom-6 2xl:left-6 text-white">
+      <div className="absolute bottom-4 left-4 2xl:bottom-6 2xl:left-6 text-white z-2">
         <h3 className="uppercase text-xs md:text-sm 2xl:text-base font-light relative transition-[clip-path] duration-800 xl:[clip-path:polygon(0_0,100%_0,100%_0,0_0)] xl:group-hover:[clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]">
           {data.title}
         </h3>
