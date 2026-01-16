@@ -20,7 +20,7 @@ function Menu() {
         <span className="absolute inline-block w-full h-px bg-gold -top-2 opacity-0 group-hover:opacity-100 group-hover:top-0 transition-all duration-250 ease-in-out"></span>
         MENU
       </DrawerTrigger>
-      <DrawerContent className="px-5 md:px-10 pt-16 pb-5 md:pt-20 md:pb-10 max-h-fit! overflow-auto">
+      <DrawerContent className="px-5 md:px-10 pt-16 pb-5 md:pt-20 md:pb-10 max-h-fit! overflow-auto bg-white">
         <article className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-10">
           <section className="order-0">
             <h2 className="uppercase mb-1.5 md:mb-3 text-[#707070] font-light text-xs md:text-base">
